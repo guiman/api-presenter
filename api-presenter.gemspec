@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["alvarola@gmail.com"]
   spec.description   = 'A JSON resource presenter for a specific api media type'
   spec.summary       = 'A JSON resource presenter for a specific api media type'
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/guiman/api-presenter"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -22,5 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   
   spec.add_dependency "multi_json", "~> 1.7.4"
-  spec.add_dependency "json", "~> 1.7.7"
+  spec.add_dependency "json", "~> 1.8.0"
 end

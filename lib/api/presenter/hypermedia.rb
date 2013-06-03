@@ -41,6 +41,7 @@ module Api
           relation = resource.send(property)
           relation_resource = (relation.kind_of? Resource) ? relation : relation.to_resource
           representation["links"][property.to_s] = relation_resource.links(embed: resource.kind_of?(CollectionResource))
+          # we only need the "self" contents
           representation["links"][property.to_s] = representation["links"][property.to_s]["self"] if representation["links"][property.to_s]["self"]
         end
       end
