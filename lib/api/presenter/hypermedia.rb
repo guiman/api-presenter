@@ -27,7 +27,7 @@ module Api
         if entries_property
           representation[entries_property.to_s] = []
           resource.send(entries_property).each do |nested_resource|
-            representation[entries_property.to_s] << nested_resource.to_resource.links(embed: true)
+            representation[entries_property.to_s] << build_links(nested_resource.to_resource, embed: true)
           end
         end
 

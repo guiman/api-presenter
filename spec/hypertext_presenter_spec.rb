@@ -21,27 +21,39 @@ describe Api::Presenter::Hypermedia do
       "entries" =>
       [
         {
-          "self" =>
+          "links" =>
           {
-            "href" => "/path/to/single_resource/1"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/1"
+            }
           }
         },
         {
-          "self" =>
+          "links" =>
           {
-            "href" => "/path/to/single_resource/2"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/2"
+            }
           }
         },
         {
-          "self" =>
+          "links" => 
           {
-            "href" => "/path/to/single_resource/3"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/3"
+            }
           }
         },
         {
-          "self" =>
+          "links" =>
           {
-            "href" => "/path/to/single_resource/4"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/4"
+            }
           }
         }
       ]
@@ -91,30 +103,44 @@ describe Api::Presenter::Hypermedia do
       },
 
       "entries" =>
-      [ {
-          "self" =>
+      [
+        {
+          "links" =>
           {
-            "href" => "/path/to/single_resource/1"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/1"
+            }
           }
         },
         {
-          "self" =>
+          "links" =>
           {
-            "href" => "/path/to/single_resource/2"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/2"
+            }
           }
         },
         {
-          "self" =>
+          "links" => 
           {
-            "href" => "/path/to/single_resource/3"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/3"
+            }
           }
         },
         {
-          "self" =>
+          "links" =>
           {
-            "href" => "/path/to/single_resource/4"
+            "self" =>
+            {
+              "href" => "/path/to/single_resource/4"
+            }
           }
-        } ]
+        }
+      ]
     }
   end
   
