@@ -1,13 +1,12 @@
 module Api
   module Presenter
-    class CollectionResource < Resource  
-      def self.hypermedia_properties
-        {
-          simple:  [:offset, :limit, :total,:entries],
-          resource: []
-        }
-      end
-  
+    class CollectionResource < Resource
+
+      property :offset
+      property :limit
+      property :total
+      property :entries
+
       def entries
         @resource
       end

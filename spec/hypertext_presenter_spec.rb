@@ -59,6 +59,7 @@ describe Api::Presenter::Hypermedia do
       ]
     }
   end
+
   let(:single_resource_standard) do
     {
       "links" =>
@@ -78,9 +79,10 @@ describe Api::Presenter::Hypermedia do
       },
       "number" => 1,
       "string" => 'This is a string',
-      "date" => Date.today.to_s
+      "date" => Date.today
     }
   end
+
   let(:search_resource_standard)do
     {
       "links" =>
@@ -147,37 +149,39 @@ describe Api::Presenter::Hypermedia do
   describe "when presenting a single resource" do
     
     let(:mock_data) { MockData.new(number: 1, string: 'This is a string', date: Date.today) }
-    let(:single_resource){ MockSingleResource.new mock_data }
-    let(:presented_single_resource){ Api::Presenter::Hypermedia.present single_resource }
+    let(:single_resource) { MockSingleResource.new mock_data }
+    let(:presented_single_resource) { single_resource.present }
     
     it "must respect the standard" do
-      MultiJson.load(presented_single_resource).must_equal single_resource_standard
+      presented_single_resource.must_equal single_resource_standard
     end    
   end
 
-  describe "presenting a collection resource" do
-    
-    let(:mock_data_collection) do
-      collection = []
-      4.times { |number| collection << MockData.new(number: number + 1, string: 'This is a string', date: Date.today) }
-      Collection.new(collection)
+   describe "presenting a collection resource" do
+     
+     let(:mock_data_collection) do
+       collection = []
+       4.times { |number| collection << MockData.new(number: number + 1, string: 'This is a string', date: Date.today) }
+       Collection.new(collection)
+     end
+     
+     let(:collection_resource) { MockCollectionResource.new mock_data_collection }
+     
+     let(:presented_collection_resource) { collection_resource.present }
+  
+     it "must respect the standard" do
+       presented_collection_resource.must_equal collection_resource_standard
+     end
+     
+     describe "presenting a search resource" do
+       
+       let(:search_resource) { MockSearchResource.new mock_data_collection, "page" => 1, "param1" => 1, "param2" => "string" }
+       
+       let(:presented_search_resource) { search_resource.present }
+     
+       it "must respect the standard" do
+         presented_search_resource.must_equal search_resource_standard
+       end
+     end
     end
-    
-    let(:collection_resource){ MockCollectionResource.new mock_data_collection }
-    
-    let(:presented_collection_resource){ Api::Presenter::Hypermedia.present collection_resource }
-
-    it "must respect the standard" do
-      MultiJson.load(presented_collection_resource).must_equal collection_resource_standard
-    end
-    
-    describe "presenting a search resource" do
-      let(:search_resource){ MockSearchResource.new mock_data_collection, "page" => 1, "param1" => 1, "param2" => "string" }
-      let(:presented_search_resource){ Api::Presenter::Hypermedia.present search_resource }
-    
-      it "must respect the standard" do
-        MultiJson.load(presented_search_resource).must_equal search_resource_standard
-      end
-    end
-  end
 end
