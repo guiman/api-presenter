@@ -50,12 +50,9 @@ In order to be able to represent this resource we need to have a PersonResource 
 
 ```ruby
 class PersonResource < Api::Presenter::Resource
-  def self.hypermedia_properties
-  {
-    simple: [:name, :age],
-    resource: []
-  }
-  end
+
+  property :name
+  property :age
   
   def self_link
     "/person/#{@resource.name}"
@@ -63,10 +60,7 @@ class PersonResource < Api::Presenter::Resource
 end
 ```
 
-The class method ```hypermedia_properties``` describes the model properties:
-
-* simple: An array containing method names that represent simple data (integers, strings, dates, etc.).
-* resource: An array containing method names thar represent related resources.
+We should use the property method to define each of our resource properties.
 
 The self_link definition tell which is the link that represents itself.
 
@@ -88,7 +82,7 @@ data = Person.new("Alvaro", 27)
 
 resource = data.to_resource # or just PersonResource.new(data)
 
-Api::Presenter::Hypermedia.present resource
+resource.present # or Api::Presenter::Hypermedia.present resource
 ```
 
 It will look like this:
@@ -115,12 +109,8 @@ Using the example above, now our person has a dog. So:
 
 ```ruby
 class DogResource < Api::Presenter::Resource
-  def self.hypermedia_properties
-  {
-    simple: [:name],
-    resource: [:owner]
-  }
-  end
+  property name
+  property owner
 
   def self_link
     "/dog/#{@resource.name}"
@@ -141,12 +131,9 @@ class Dog
 end
 
 class PersonResource < Api::Presenter::Resource
-  def self.hypermedia_properties
-  {
-    simple: [:name, :age],
-    resource: [:dog]
-  }
-  end
+  property :name
+  property :age
+  property :dog
 end
 ```
 
@@ -159,7 +146,7 @@ dog = Dog.new("Cleo", person)
 
 person_resource = person.to_resource # or just PersonResource.new(person)
 
-Api::Presenter::Hypermedia.present person_resource
+person_resource.present # Api::Presenter::Hypermedia.present person_resource
 ```
 
 It will look like this:

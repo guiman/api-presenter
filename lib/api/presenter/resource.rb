@@ -4,17 +4,30 @@ module Api
       def initialize(resource)
         @resource = resource
       end
-  
+
+      class << self
+        def property(value)
+          properties << value unless properties.include? value
+        end
+
+        def properties
+          @properties ||= []
+        end
+
+        def inherited(subclass)
+          subclass.properties << properties
+          subclass.properties.flatten!
+        end
+      end
+
       def method_missing(method, *args, &block)
-        allowed_methods = self.class.hypermedia_properties[:simple].concat self.class.hypermedia_properties[:resource]
-    
-        if allowed_methods.include? method
+        if self.class.properties.include? method
           @resource.send(method, *args, &block)
         else
           super
         end
       end
-  
+
       def links(options = {})
         links = {}
 
@@ -22,12 +35,16 @@ module Api
           link_name = link_method.to_s.split("_").first
           links[link_name] = { "href" => self.send(link_method) } if self.send(link_method.to_s + "?", options)
         end
-    
+
         links
       end
-  
+
       def self_link?(options = {})
         true
+      end
+      
+      def present
+        Api::Presenter::Hypermedia.present self
       end
     end
   end

@@ -36,12 +36,11 @@ module HypertextPresenterMocks
   end
 
   class MockSingleResource < Api::Presenter::Resource
-    def self.hypermedia_properties
-      {
-       simple: [:number, :string, :date],
-       resource: [:sibling]
-      }
-    end
+
+    property :number
+    property :string
+    property :date
+    property :sibling
   
     def self_link
       "/path/to/single_resource/#{@resource.number}"
