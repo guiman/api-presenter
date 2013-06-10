@@ -1,7 +1,7 @@
 # Api::Presenter
 
 This gem builds the basics for presenting your data using the media type described in the [api doc](https://github.com/ncuesta/api-doc). Here you will find classes to represent your resources
-and also the functions to convert them to json.
+and also the functions to convert them to a ruby hash. It's your decision how to export them.
 
 ## Installation
 
@@ -75,7 +75,7 @@ class Person
 end
 ```
 
-And that's it, now we can get the representation in json using.
+And that's it, now we can get the representation in a hash using.
 
 ```ruby
 data = Person.new("Alvaro", 27)
@@ -86,7 +86,7 @@ resource.present # or Api::Presenter::Hypermedia.present resource
 ```
 
 It will look like this:
-```json
+```ruby
 {
   "links":
   {
@@ -102,15 +102,14 @@ It will look like this:
 ### Related resources
 
 It's very common that our model is related to others, and we may want to show this in our representation.
-To do so, need to create a resource class for each one and add them to our ```resource``` array in
-hypermedia_properties.
+To do so, need to create a resource class for each one and add them as a new property.
 
 Using the example above, now our person has a dog. So:
 
 ```ruby
 class DogResource < Api::Presenter::Resource
-  property name
-  property owner
+  property :name
+  property :owner
 
   def self_link
     "/dog/#{@resource.name}"
@@ -151,7 +150,7 @@ person_resource.present # Api::Presenter::Hypermedia.present person_resource
 
 It will look like this:
 
-```json
+```ruby
 {
   "links":
   {
@@ -333,7 +332,6 @@ two methods in your resource class:
 def custom_link
   "/path/to/custom_link"
 end
-
 
 def custom_link?(options = {})
   a_condition_that_determins_if_it_should_be_displayed returning true or false
