@@ -15,7 +15,7 @@ module Api
         # simlple fields(Dates, numbers, etc.) and also more
         # complex ones that may be subject of expansion.
         def present_properties(resource, representation)
-          resource_properties = resource.class.properties
+          resource_properties = resource.class.properties.dup
           
           # Special treatment for entries
           entries_property = resource_properties.delete(:entries)

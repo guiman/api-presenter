@@ -15,8 +15,7 @@ module Api
         end
 
         def inherited(subclass)
-          subclass.properties << properties
-          subclass.properties.flatten!
+          (subclass.properties << properties).flatten!
         end
       end
 
