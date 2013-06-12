@@ -338,6 +338,49 @@ def custom_link?(options = {})
 end
 ```
 
+### Using full links
+If you want to use full links and not parcial, you can say:
+
+```ruby
+Api::Presenter::Resource.host = "http://you.domain.goes.here:port"
+```
+
+Now links will be display like this:
+
+```json
+{
+  "links":
+  {
+    "self":
+    {
+      "href": "http://you.domain.goes.here:port/search_person?query[age]=45query[name]="
+    },
+  }
+  "offset": 0,
+  "limit": 10,
+  "total": 2,
+  "query":
+  {
+    "age": 45,
+    "name": nil
+  },
+  "entries":
+  [
+    {
+      "self":
+      {
+        "href" : "http://you.domain.goes.here:port/person/Joe"
+      }
+    },
+    {
+      "self":
+      {
+        "href" : "http://you.domain.goes.here:port/person/Jane"
+      }
+    }
+  ]
+}
+```
 
 ## Contributing
 
