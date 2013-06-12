@@ -176,7 +176,7 @@ describe Api::Presenter::Hypermedia do
   describe "when using host" do
     it "must display a complete url" do
       Api::Presenter::Resource.host = "http://localhost:9292"
-
+      
       mock_data.to_resource.present.wont_equal single_resource_standard
 
       new_single_resource_standard = {
@@ -201,6 +201,8 @@ describe Api::Presenter::Hypermedia do
       }
       
       mock_data.to_resource.present.must_equal new_single_resource_standard
+      
+      Api::Presenter::Resource.host = nil
     end    
   end
   
