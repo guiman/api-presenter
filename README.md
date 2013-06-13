@@ -55,10 +55,6 @@ class PersonResource < Api::Presenter::Resource
   property :age
   
   link "self", "/person/{{name}}"
-  
-  def self_link
-    
-  end
 end
 ```
 
