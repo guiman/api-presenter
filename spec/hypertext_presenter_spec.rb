@@ -162,6 +162,9 @@ describe Api::Presenter::Hypermedia do
 
       class MockSingleSpecificResource < MockSingleResource
         property :floating_point_value
+
+        link "self", "/path/to/single_resource/{{number}}"
+        link("custom", "/path/to/custom_link") { |options = {}| options[:embed].nil? || !options[:embed] }
       end
 
       new_single_resource_standard = single_resource_standard
@@ -202,7 +205,7 @@ describe Api::Presenter::Hypermedia do
       
       mock_data.to_resource.present.must_equal new_single_resource_standard
       
-      Api::Presenter::Resource.host = nil
+      Api::Presenter::Resource.host = ''
     end    
   end
   
@@ -214,31 +217,31 @@ describe Api::Presenter::Hypermedia do
     end    
   end
 
-   describe "presenting a collection resource" do
-     
-     let(:mock_data_collection) do
-       collection = []
-       4.times { |number| collection << MockData.new(number: number + 1, string: 'This is a string', date: Date.today) }
-       Collection.new(collection)
-     end
-     
-     let(:collection_resource) { MockCollectionResource.new mock_data_collection }
-     
-     let(:presented_collection_resource) { collection_resource.present }
-  
-     it "must respect the standard" do
-       presented_collection_resource.must_equal collection_resource_standard
-     end
-     
-     describe "presenting a search resource" do
-       
-       let(:search_resource) { MockSearchResource.new mock_data_collection, "page" => 1, "param1" => 1, "param2" => "string" }
-       
-       let(:presented_search_resource) { search_resource.present }
-     
-       it "must respect the standard" do
-         presented_search_resource.must_equal search_resource_standard
-       end
-     end
+  describe "presenting a collection resource" do
+    
+    let(:mock_data_collection) do
+      collection = []
+      4.times { |number| collection << MockData.new(number: number + 1, string: 'This is a string', date: Date.today) }
+      Collection.new(collection)
     end
+    
+    let(:collection_resource) { MockCollectionResource.new mock_data_collection }
+    
+    let(:presented_collection_resource) { collection_resource.present }
+ 
+    it "must respect the standard" do
+      presented_collection_resource.must_equal collection_resource_standard
+    end
+    
+    describe "presenting a search resource" do
+      
+      let(:search_resource) { MockSearchResource.new mock_data_collection, "page" => 1, "param1" => 1, "param2" => "string" }
+      
+      let(:presented_search_resource) { search_resource.present }
+    
+      it "must respect the standard" do
+        presented_search_resource.must_equal search_resource_standard
+      end
+    end
+   end
 end

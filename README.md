@@ -54,15 +54,16 @@ class PersonResource < Api::Presenter::Resource
   property :name
   property :age
   
-  def self_link
-    "/person/#{@resource.name}"
-  end
+  link "self", "/person/{{name}}"
 end
 ```
 
 We should use the property method to define each of our resource properties.
 
-The self_link definition tell which is the link that represents itself.
+The ```link``` method defines there is a "self" link which represents itself. It receives, the name of the link,
+the url representing it and optionally a block, that may receive a hash with options and should return a boolean.
+
+The stubs that look like ```{{method_name}}``` will be latter replaced with a method call to ```method_name``` on the resource.
 
 So now there is only one more thing left to do: Add the to_resource method used to convert the model
 into a resource.
@@ -111,9 +112,7 @@ class DogResource < Api::Presenter::Resource
   property :name
   property :owner
 
-  def self_link
-    "/dog/#{@resource.name}"
-  end
+  link "self", "/dog/{{name}}"
 end
 
 class Dog
@@ -267,8 +266,7 @@ This is a special case of ```Api::Presenter::CollectionResource``` where it also
 The main difference with a Collection is that it receives as a parameter, the parameters which where used to build
 the collection and also adds them to the response.
 
-The method ```self.hypermedia_query_parameters``` determins which parameters are used in the search. It's later used
-by the helper method ```query_string``` to build the query string.
+The method ```self.hypermedia_query_parameters``` determins which parameters are used in the search. It's later used to build the query string for the url.
 
 ```ruby
 class PersonSearchResource < Api::Presenter::SearchResource
@@ -276,9 +274,7 @@ class PersonSearchResource < Api::Presenter::SearchResource
     ["name", "age"]
   end
 
-  def self_link
-    "/search_person#{query_string}"
-  end
+  link "self", "/search_person"
 end
 
 search = PersonSearchResource.new(Collection.new([Person.new("Joe", 50), Person.new("Jane", 45)]), age: 45)
@@ -325,17 +321,17 @@ It will look like this:
 
 ### Adding additional links
 
-When building a resource there may be the need to build custom links. In order to do so, you need to define
-two methods in your resource class:
+When building a resource there may be the need to build custom links. In order to do so, can use
+the ```link``` class method:
 
 ```ruby
-def custom_link
-  "/path/to/custom_link"
-end
+link("custom", "/path/to/custom_link") { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
+```
 
-def custom_link?(options = {})
-  a_condition_that_determins_if_it_should_be_displayed returning true or false
-end
+You can also use special stubs (enclosed with ```{{method_name}}``` ) that will latter be resolved in call to the resource, like this:
+
+```ruby
+link("custom", "/path/to/custom_link/{{method_call}}") { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
 ```
 
 ### Using full links
