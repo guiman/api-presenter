@@ -36,23 +36,13 @@ module HypertextPresenterMocks
   end
 
   class MockSingleResource < Api::Presenter::Resource
-
     property :number
     property :string
     property :date
     property :sibling
-  
-    def self_link
-      "/path/to/single_resource/#{@resource.number}"
-    end
-  
-    def custom_link
-      "/path/to/custom_link"
-    end
-  
-    def custom_link?(options = {})
-      options[:embed].nil? || !options[:embed]
-    end
+    
+    link "self", "/path/to/single_resource/{{number}}"
+    link("custom", "/path/to/custom_link") { |options = {}| options[:embed].nil? || !options[:embed] }
   
     def sibling
       MockSingleResource.new(MockData.new(number: 20, string: "I'm a sibling of someone", date: (Date.today + 1)))
@@ -60,20 +50,16 @@ module HypertextPresenterMocks
   end
 
   class MockCollectionResource < Api::Presenter::CollectionResource
-    def self_link
-      "/path/to/collection_resource"
-    end
+    link "self", "/path/to/collection_resource"
   end
 
   class MockSearchResource < Api::Presenter::SearchResource
     def self.hypermedia_query_parameters
       ["page", "param1","param2"]
     end
-  
-    def self_link
-      "/path/to/search_resource#{query_string}"
-    end
-  
+
+    link "self", "/path/to/search_resource"
+
     def current_page
       1
     end

@@ -13,6 +13,16 @@ module Api
         def properties
           @properties ||= []
         end
+
+        def link(name, value, &condition)
+          condition = Proc.new { true } unless block_given?
+
+          links[name] = { value: value, condition: condition }
+        end
+
+        def links
+          @links ||= {}
+        end
         
         def host
           @@host ||= ''
@@ -35,12 +45,20 @@ module Api
         end
       end
 
-      def links(options = {})
+      def build_links(options = {})
         links = {}
 
-        self.methods.grep(/_link$/).each do |link_method|
-          link_name = link_method.to_s.split("_").first
-          links[link_name] = { "href" => "#{self.class.host}#{self.send(link_method)}" } if self.send(link_method.to_s + "?", options)
+        self.class.links.each do |link_name, link_value|
+          link_actual_value = link_value[:value].dup
+          
+          # retrieve stubs to replace looking for {{method_to_call}}
+          stubs = link_actual_value.scan(/\{\{(\w+)\}\}/).flatten
+          
+          # now we replace them
+          stubs.each{ |stub| link_actual_value.gsub!(/\{\{#{stub}\}\}/, self.send(stub.to_sym).to_s) }
+          
+          # and finish the url
+          links[link_name.to_s] = { "href" => "#{self.class.host}#{link_actual_value}" } if link_value[:condition].call(options)
         end
 
         links
