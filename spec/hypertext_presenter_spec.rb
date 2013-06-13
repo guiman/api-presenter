@@ -145,12 +145,69 @@ describe Api::Presenter::Hypermedia do
       ]
     }
   end
+
+  let(:mock_data) { MockData.new(number: 1, string: 'This is a string', date: Date.today) }
+
+  describe "when defining properties" do
+    it "must add and display a property" do
+      class MockSpecificData < MockData
+        def floating_point_value
+          10.3
+        end
+        
+        def to_resource
+          MockSingleSpecificResource.new self
+        end
+      end
+
+      class MockSingleSpecificResource < MockSingleResource
+        property :floating_point_value
+      end
+
+      new_single_resource_standard = single_resource_standard
+      new_single_resource_standard['floating_point_value'] = 10.3
+      
+      mock_data = MockSpecificData.new(number: 1, string: 'This is a string', date: Date.today)
+
+      mock_data.to_resource.present.must_equal new_single_resource_standard
+    end
+  end
+  
+  describe "when using host" do
+    it "must display a complete url" do
+      Api::Presenter::Resource.host = "http://localhost:9292"
+      
+      mock_data.to_resource.present.wont_equal single_resource_standard
+
+      new_single_resource_standard = {
+        "links" =>
+        {
+          "self" =>
+          {
+            "href" => "http://localhost:9292/path/to/single_resource/1"
+          },
+          "custom" =>
+          {
+            "href" => "http://localhost:9292/path/to/custom_link"
+          },
+          "sibling" =>
+          {
+            "href" => "http://localhost:9292/path/to/single_resource/20"
+          }
+        },
+        "number" => 1,
+        "string" => 'This is a string',
+        "date" => Date.today
+      }
+      
+      mock_data.to_resource.present.must_equal new_single_resource_standard
+      
+      Api::Presenter::Resource.host = nil
+    end    
+  end
   
   describe "when presenting a single resource" do
-    
-    let(:mock_data) { MockData.new(number: 1, string: 'This is a string', date: Date.today) }
-    let(:single_resource) { MockSingleResource.new mock_data }
-    let(:presented_single_resource) { single_resource.present }
+    let(:presented_single_resource) { mock_data.to_resource.present }
     
     it "must respect the standard" do
       presented_single_resource.must_equal single_resource_standard

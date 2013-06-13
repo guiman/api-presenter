@@ -13,6 +13,14 @@ module Api
         def properties
           @properties ||= []
         end
+        
+        def host
+          @@host ||= ''
+        end
+        
+        def host=(v)
+          @@host = v
+        end
 
         def inherited(subclass)
           (subclass.properties << properties).flatten!
@@ -32,7 +40,7 @@ module Api
 
         self.methods.grep(/_link$/).each do |link_method|
           link_name = link_method.to_s.split("_").first
-          links[link_name] = { "href" => self.send(link_method) } if self.send(link_method.to_s + "?", options)
+          links[link_name] = { "href" => "#{self.class.host}#{self.send(link_method)}" } if self.send(link_method.to_s + "?", options)
         end
 
         links
