@@ -1,4 +1,6 @@
 # Api::Presenter
+[![Build Status](https://travis-ci.org/guiman/api-presenter.png?branch=complete_url_feature)](https://travis-ci.org/guiman/api-presenter)
+[![Code Climate](https://codeclimate.com/github/guiman/api-presenter.png)](https://codeclimate.com/github/guiman/api-presenter)
 
 This gem builds the basics for presenting your data using the media type described in the [api doc](https://github.com/ncuesta/api-doc). Here you will find classes to represent your resources
 and also the functions to convert them to a ruby hash. It's your decision how to export them.
