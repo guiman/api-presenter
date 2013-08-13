@@ -96,7 +96,7 @@ describe Api::Presenter::Hypermedia do
       "offset" => 0,
       "limit" => 15,
       "total" => 4,
-      
+
       "query" =>
       {
         "page" => 1,
@@ -154,7 +154,7 @@ describe Api::Presenter::Hypermedia do
         def floating_point_value
           10.3
         end
-        
+
         def to_resource
           MockSingleSpecificResource.new self
         end
@@ -169,17 +169,17 @@ describe Api::Presenter::Hypermedia do
 
       new_single_resource_standard = single_resource_standard
       new_single_resource_standard['floating_point_value'] = 10.3
-      
+
       mock_data = MockSpecificData.new(number: 1, string: 'This is a string', date: Date.today)
 
       mock_data.to_resource.present.must_equal new_single_resource_standard
     end
   end
-  
+
   describe "when using host" do
     it "must display a complete url" do
       Api::Presenter::Resource.host = "http://localhost:9292"
-      
+
       mock_data.to_resource.present.wont_equal single_resource_standard
 
       new_single_resource_standard = {
@@ -202,43 +202,76 @@ describe Api::Presenter::Hypermedia do
         "string" => 'This is a string',
         "date" => Date.today
       }
-      
+
       mock_data.to_resource.present.must_equal new_single_resource_standard
-      
+
       Api::Presenter::Resource.host = ''
-    end    
+    end
   end
-  
+
+  describe "when using prefix" do
+    it "must display a complete url" do
+      Api::Presenter::Resource.prefix = "/my_prefix"
+
+      mock_data.to_resource.present.wont_equal single_resource_standard
+
+      new_single_resource_standard = {
+        "links" =>
+        {
+          "self" =>
+          {
+            "href" => "/my_prefix/path/to/single_resource/1"
+          },
+          "custom" =>
+          {
+            "href" => "/my_prefix/path/to/custom_link"
+          },
+          "sibling" =>
+          {
+            "href" => "/my_prefix/path/to/single_resource/20"
+          }
+        },
+        "number" => 1,
+        "string" => 'This is a string',
+        "date" => Date.today
+      }
+
+      mock_data.to_resource.present.must_equal new_single_resource_standard
+
+      Api::Presenter::Resource.prefix = ''
+    end
+  end
+
   describe "when presenting a single resource" do
     let(:presented_single_resource) { mock_data.to_resource.present }
-    
+
     it "must respect the standard" do
       presented_single_resource.must_equal single_resource_standard
-    end    
+    end
   end
 
   describe "presenting a collection resource" do
-    
+
     let(:mock_data_collection) do
       collection = []
       4.times { |number| collection << MockData.new(number: number + 1, string: 'This is a string', date: Date.today) }
       Collection.new(collection)
     end
-    
+
     let(:collection_resource) { MockCollectionResource.new mock_data_collection }
-    
+
     let(:presented_collection_resource) { collection_resource.present }
- 
+
     it "must respect the standard" do
       presented_collection_resource.must_equal collection_resource_standard
     end
-    
+
     describe "presenting a search resource" do
-      
+
       let(:search_resource) { MockSearchResource.new mock_data_collection, "page" => 1, "param1" => 1, "param2" => "string" }
-      
+
       let(:presented_search_resource) { search_resource.present }
-    
+
       it "must respect the standard" do
         presented_search_resource.must_equal search_resource_standard
       end
