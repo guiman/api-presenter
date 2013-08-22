@@ -56,13 +56,13 @@ class PersonResource < Api::Presenter::Resource
   property :name
   property :age
   
-  link "self", "/person/{{name}}"
+  link 'self', '/person/{{name}}'
 end
 ```
 
 We should use the property method to define each of our resource properties.
 
-The ```link``` method defines there is a "self" link which represents itself. It receives, the name of the link,
+The ```link``` method defines there is a 'self' link which represents itself. It receives, the name of the link,
 the url representing it and optionally a block, that may receive a hash with options and should return a boolean.
 
 The stubs that look like ```{{method_name}}``` will be latter replaced with a method call to ```method_name``` on the resource.
@@ -81,7 +81,7 @@ end
 And that's it, now we can get the representation in a hash using.
 
 ```ruby
-data = Person.new("Alvaro", 27)
+data = Person.new('Alvaro', 27)
 
 resource = data.to_resource # or just PersonResource.new(data)
 
@@ -91,15 +91,15 @@ resource.present # or Api::Presenter::Hypermedia.present resource
 It will look like this:
 ```ruby
 {
-  "links":
+  'links':
   {
-    "self":
+    'self':
     {
-      "href": "/person/Alvaro"
+      'href': '/person/Alvaro'
     }
   }
-  "name": "Alvaro",
-  "age": 27
+  'name': 'Alvaro',
+  'age': 27
 }
 ```
 ### Related resources
@@ -114,7 +114,7 @@ class DogResource < Api::Presenter::Resource
   property :name
   property :owner
 
-  link "self", "/dog/{{name}}"
+  link 'self', '/dog/{{name}}'
 end
 
 class Dog
@@ -140,9 +140,9 @@ end
 Finally we present it:
 
 ```ruby
-person = Person.new("Alvaro", 27)
+person = Person.new('Alvaro', 27)
 
-dog = Dog.new("Cleo", person)
+dog = Dog.new('Cleo', person)
 
 person_resource = person.to_resource # or just PersonResource.new(person)
 
@@ -153,19 +153,19 @@ It will look like this:
 
 ```ruby
 {
-  "links":
+  'links':
   {
-    "self":
+    'self':
     {
-      "href": "/person/Alvaro"
+      'href': '/person/Alvaro'
     },
-    "dog":
+    'dog':
     {
-      "href": "/dog/Cleo"
+      'href': '/dog/Cleo'
     }
   }
-  "name": "Alvaro",
-  "age": 27
+  'name': 'Alvaro',
+  'age': 27
 }
 ```
 
@@ -207,11 +207,11 @@ class Collection
   end
 end
 
-family = Collection.new([Person.new("Joe", 50), Person.new("Jane", 45), Person.new("Timmy", 10), Person.new("Sussie", 12)])
+family = Collection.new([Person.new('Joe', 50), Person.new('Jane', 45), Person.new('Timmy', 10), Person.new('Sussie', 12)])
 
 class FamilyResource < Api::Presenter::CollectionResource
   def self_link
-    "/family"
+    '/family'
   end
 end
 
@@ -222,40 +222,40 @@ It will look like this:
 
 ```json
 {
-  "links":
+  'links':
   {
-    "self":
+    'self':
     {
-      "href": "/family"
+      'href': '/family'
     },
   }
-  "offset": 0,
-  "limit": 10,
-  "total": 4,
-  "entries":
+  'offset': 0,
+  'limit': 10,
+  'total': 4,
+  'entries':
   [
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Joe"
+        'href' : '/person/Joe'
       }
     },
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Jane"
+        'href' : '/person/Jane'
       }
     },
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Timmy"
+        'href' : '/person/Timmy'
       },
     },
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Sussie"
+        'href' : '/person/Sussie'
       }
     }
   ]
@@ -273,13 +273,13 @@ The method ```self.hypermedia_query_parameters``` determins which parameters are
 ```ruby
 class PersonSearchResource < Api::Presenter::SearchResource
   def self.hypermedia_query_parameters
-    ["name", "age"]
+    ['name', 'age']
   end
 
-  link "self", "/search_person"
+  link 'self', '/search_person'
 end
 
-search = PersonSearchResource.new(Collection.new([Person.new("Joe", 50), Person.new("Jane", 45)]), age: 45)
+search = PersonSearchResource.new(Collection.new([Person.new('Joe', 50), Person.new('Jane', 45)]), age: 45)
 
 Api::Presenter::Hypermedia.present search
 ```
@@ -288,33 +288,33 @@ It will look like this:
 
 ```json
 {
-  "links":
+  'links':
   {
-    "self":
+    'self':
     {
-      "href": "/search_person?query[age]=45query[name]="
+      'href': '/search_person?query[age]=45query[name]='
     },
   }
-  "offset": 0,
-  "limit": 10,
-  "total": 2,
-  "query":
+  'offset': 0,
+  'limit': 10,
+  'total': 2,
+  'query':
   {
-    "age": 45,
-    "name": nil
+    'age': 45,
+    'name': nil
   },
-  "entries":
+  'entries':
   [
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Joe"
+        'href' : '/person/Joe'
       }
     },
     {
-      "self":
+      'self':
       {
-        "href" : "/person/Jane"
+        'href' : '/person/Jane'
       }
     }
   ]
@@ -327,58 +327,146 @@ When building a resource there may be the need to build custom links. In order t
 the ```link``` class method:
 
 ```ruby
-link("custom", "/path/to/custom_link") { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
+link('custom', '/path/to/custom_link') { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
 ```
 
 You can also use special stubs (enclosed with ```{{method_name}}``` ) that will latter be resolved in call to the resource, like this:
 
 ```ruby
-link("custom", "/path/to/custom_link/{{method_call}}") { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
+link('custom', '/path/to/custom_link/{{method_call}}') { |options = {}| a_condition_that_determins_if_it_should_be_displayed returning true or false }
 ```
 
 ### Using full links
 If you want to use full links and not parcial, you can say:
 
 ```ruby
-Api::Presenter::Resource.host = "http://you.domain.goes.here:port"
+Api::Presenter::Resource.host = 'http://you.domain.goes.here:port'
 ```
 
 Now links will be display like this:
 
 ```json
 {
-  "links":
+  'links':
   {
-    "self":
+    'self':
     {
-      "href": "http://you.domain.goes.here:port/search_person?query[age]=45query[name]="
+      'href': 'http://you.domain.goes.here:port/search_person?query[age]=45query[name]='
     },
   }
-  "offset": 0,
-  "limit": 10,
-  "total": 2,
-  "query":
+  'offset': 0,
+  'limit': 10,
+  'total': 2,
+  'query':
   {
-    "age": 45,
-    "name": nil
+    'age': 45,
+    'name': nil
   },
-  "entries":
+  'entries':
   [
     {
-      "self":
+      'self':
       {
-        "href" : "http://you.domain.goes.here:port/person/Joe"
+        'href' : 'http://you.domain.goes.here:port/person/Joe'
       }
     },
     {
-      "self":
+      'self':
       {
-        "href" : "http://you.domain.goes.here:port/person/Jane"
+        'href' : 'http://you.domain.goes.here:port/person/Jane'
       }
     }
   ]
 }
 ```
+### Using prefix option
+If you want to use a prefix in all your links, and don't want to write it in every request, you can say:
+
+```ruby
+Api::Presenter::Resource.prefix = '/my_prefix'
+```
+
+Now links will be display like this:
+
+```json
+{
+  'links':
+  {
+    'self':
+    {
+      'href': '/my_prefix/search_person?query[age]=45query[name]='
+    },
+  }
+  'offset': 0,
+  'limit': 10,
+  'total': 2,
+  'query':
+  {
+    'age': 45,
+    'name': nil
+  },
+  'entries':
+  [
+    {
+      'self':
+      {
+        'href' : '/my_prefix/person/Joe'
+      }
+    },
+    {
+      'self':
+      {
+        'href' : '/my_prefix/person/Jane'
+      }
+    }
+  ]
+}
+```
+
+You can even use the prefix option with the host option:
+
+```ruby
+Api::Presenter::Resource.host = 'http://you.domain.goes.here:port'
+Api::Presenter::Resource.prefix = '/my_prefix'
+```
+
+Now links will be display like this:
+
+```json
+{
+  'links':
+  {
+    'self':
+    {
+      'href': 'http://you.domain.goes.here:port/my_prefix/search_person?query[age]=45query[name]='
+    },
+  }
+  'offset': 0,
+  'limit': 10,
+  'total': 2,
+  'query':
+  {
+    'age': 45,
+    'name': nil
+  },
+  'entries':
+  [
+    {
+      'self':
+      {
+        'href' : 'http://you.domain.goes.here:port/my_prefix/person/Joe'
+      }
+    },
+    {
+      'self':
+      {
+        'href' : 'http://you.domain.goes.here:port/my_prefix/person/Jane'
+      }
+    }
+  ]
+}
+```
+
 
 ## Contributing
 
