@@ -380,7 +380,7 @@ Now links will be display like this:
 }
 ```
 ### Using prefix option
-If you want to use a prefix in all your links, and don't want to write it in every request, you can say:
+If you want to use a **prefix** in all your links, and don't want to write it every time, you can say:
 
 ```ruby
 Api::Presenter::Resource.prefix = '/my_prefix'
@@ -423,7 +423,7 @@ Now links will be display like this:
 }
 ```
 
-You can even use the prefix option with the host option:
+You can even use the **prefix** option with the **host** option:
 
 ```ruby
 Api::Presenter::Resource.host = 'http://you.domain.goes.here:port'
@@ -466,7 +466,6 @@ Now links will be display like this:
   ]
 }
 ```
-
 
 ## Contributing
 
