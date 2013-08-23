@@ -379,6 +379,93 @@ Now links will be display like this:
   ]
 }
 ```
+### Using prefix option
+If you want to use a **prefix** in all your links, and don't want to write it every time, you can say:
+
+```ruby
+Api::Presenter::Resource.prefix = '/my_prefix'
+```
+
+Now links will be display like this:
+
+```json
+{
+  "links":
+  {
+    "self":
+    {
+      "href": "/my_prefix/search_person?query[age]=45query[name]="
+    },
+  }
+  "offset": 0,
+  "limit": 10,
+  "total": 2,
+  "query":
+  {
+    "age": 45,
+    "name": nil
+  },
+  "entries":
+  [
+    {
+      "self":
+      {
+        "href" : "/my_prefix/person/Joe"
+      }
+    },
+    {
+      "self":
+      {
+        "href" : "/my_prefix/person/Jane"
+      }
+    }
+  ]
+}
+```
+
+You can even use the **prefix** option with the **host** option:
+
+```ruby
+Api::Presenter::Resource.host = 'http://you.domain.goes.here:port'
+Api::Presenter::Resource.prefix = '/my_prefix'
+```
+
+Now links will be display like this:
+
+```json
+{
+  "links":
+  {
+    "self":
+    {
+      "href": "http://you.domain.goes.here:port/my_prefix/search_person?query[age]=45query[name]="
+    },
+  }
+  "offset": 0,
+  "limit": 10,
+  "total": 2,
+  "query":
+  {
+    "age": 45,
+    "name": nil
+  },
+  "entries":
+  [
+    {
+      "self":
+      {
+        "href" : "http://you.domain.goes.here:port/my_prefix/person/Joe"
+      }
+    },
+    {
+      "self":
+      {
+        "href" : "http://you.domain.goes.here:port/my_prefix/person/Jane"
+      }
+    }
+  ]
+}
+```
 
 ## Contributing
 
